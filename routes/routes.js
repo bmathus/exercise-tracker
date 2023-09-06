@@ -49,7 +49,7 @@ router.post('/api/users/:_id/exercises', async (req, res) => {
     };
 
     user.log.push(exercise);
-    user.count++;
+    user.count = user.count + 1;
 
     const savedUser = await user.save();
 
@@ -69,7 +69,10 @@ router.post('/api/users/:_id/exercises', async (req, res) => {
 
 router.get('/api/users/:_id/logs', async (req, res) => {
   try {
-    const user = await Model.findById(req.params._id).select({ 'log._id': 0 });
+    const user = await Model.findById(req.params._id).select({
+      'log._id': 0,
+      __v: 0,
+    });
 
     const formattedUser = {
       ...user._doc,
