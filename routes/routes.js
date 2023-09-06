@@ -36,6 +36,12 @@ router.get('/api/users', async (req, res) => {
 router.post('/api/users/:_id/exercises', async (req, res) => {
   const { description, duration, date } = req.body;
 
+  const exercise = {
+    description: description,
+    duration: Number(duration),
+    date: date === '' ? new Date() : new Date(date),
+  };
+
   try {
     const user = await Model.findById(req.params._id);
     if (!user) {
@@ -43,11 +49,6 @@ router.post('/api/users/:_id/exercises', async (req, res) => {
         message: `User with id:${req.params._id} not found!`,
       });
     }
-    const exercise = {
-      description: description,
-      duration: Number(duration),
-      date: date === '' ? new Date() : new Date(date),
-    };
 
     user.log.push(exercise);
     user.count = user.count + 1;
