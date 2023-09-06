@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+
 const { Model } = require('../models/models');
 
 const router = express.Router();
@@ -68,26 +69,43 @@ router.post('/api/users/:_id/exercises', async (req, res) => {
 });
 
 router.get('/api/users/:_id/logs', async (req, res) => {
-  try {
-    const user = await Model.findById(req.params._id).select({
-      'log._id': 0,
-      __v: 0,
-    });
+  const { from, to, limit } = req.query;
+  const fromDate = new Date(from);
+  const toDate = new Date(to);
 
-    const formattedUser = {
-      ...user._doc,
-      log: user.log.map((logEntry) => ({
-        ...logEntry._doc,
-        date: logEntry.date.toDateString(),
-      })),
-    };
+  const user = await Model.findOne({ _id: req.params._id }).select({
+    'log._id': 0,
+    __v: 0,
+  });
 
-    return res.json(formattedUser);
-  } catch (error) {
+  if (!user) {
     return res.json({
-      error: error.message,
+      error: 'Could not find user!',
     });
   }
+
+  const filteredLogs = user.log.filter((exercise) => {
+    if ((from && exercise.date < fromDate) || (to && exercise.date > toDate)) {
+      return false;
+    }
+    return true;
+  });
+
+  if (limit) {
+    user.log = filteredLogs.slice(0, Number(limit));
+  } else {
+    user.log = filteredLogs;
+  }
+
+  const formattedUser = {
+    ...user._doc,
+    log: user.log.map((logEntry) => ({
+      ...logEntry._doc,
+      date: logEntry.date.toDateString(),
+    })),
+  };
+
+  return res.json(formattedUser);
 });
 
 module.exports = router;
