@@ -41,6 +41,7 @@ router.post('/api/users/:_id/exercises', async (req, res) => {
     duration: Number(duration),
     date: date === '' ? new Date() : new Date(date),
   };
+  console.log(exercise);
 
   try {
     const user = await Model.findById(req.params._id);
