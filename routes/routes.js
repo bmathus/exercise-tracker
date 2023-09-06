@@ -99,6 +99,7 @@ router.get('/api/users/:_id/logs', async (req, res) => {
 
   const formattedUser = {
     ...user._doc,
+    count: user.log.length,
     log: user.log.map((logEntry) => ({
       ...logEntry._doc,
       date: logEntry.date.toDateString(),
