@@ -41,6 +41,9 @@ router.post('/api/users/:_id/exercises', async (req, res) => {
     duration: Number(duration),
     date: date === '' ? new Date() : new Date(date),
   };
+  if (exercise.date.toString() === 'Invalid Date') {
+    return res.json({ error: 'date is invalid' });
+  }
   console.log(exercise);
 
   try {
