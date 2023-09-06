@@ -48,7 +48,7 @@ router.post('/api/users/:_id/exercises', async (req, res) => {
       date: date === '' ? new Date() : date,
     };
     user.log.push(exercise);
-    savedUser.count++;
+    user.count++;
 
     const savedUser = await user.save();
 
