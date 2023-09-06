@@ -45,8 +45,9 @@ router.post('/api/users/:_id/exercises', async (req, res) => {
     const exercise = {
       description: description,
       duration: Number(duration),
-      date: date === '' ? new Date() : date,
+      date: date === '' ? new Date() : new Date(date),
     };
+
     user.log.push(exercise);
     user.count++;
 
