@@ -70,7 +70,6 @@ router.post('/api/users/:_id/exercises', async (req, res) => {
 
 router.get('/api/users/:_id/logs', async (req, res) => {
   const { from, to, limit } = req.query;
-  console.log(from, to, limit);
   console.log(req.url);
   const fromDate = new Date(from);
   const toDate = new Date(to);
@@ -107,6 +106,7 @@ router.get('/api/users/:_id/logs', async (req, res) => {
       date: logEntry.date.toDateString(),
     })),
   };
+  console.log(formattedUser);
 
   return res.json(formattedUser);
 });
